@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>صداباز - فروش هدفون و هندزفری</title>
+<style>
+  @import url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css');
+  body {
+    font-family: 'Vazir', sans-serif;
+    background: #e0f2f1;
+    margin: 0; padding: 0 20px 40px;
+    min-height: 100vh;
+  }
+  header {
+    background: linear-gradient(rgba(121, 0, 30, 0.7), rgba(0,121,107,0.7)),
+                url('https://s6.uupload.ir/files/c3447390-1c0d-464a-a40b-02a39a24a934_jq2x.jpeg') no-repeat center/cover;
+    color: white;
+    padding: 250px 15px;
+    text-align: center;
+    box-shadow: 0 10px 8px rgba(89, 121, 0, 0.6);
+    position: relative;
+  }
+  header h1 {
+    margin: 0;
+    font-weight: 900;
+    font-size: 2.8rem;
+    letter-spacing: 2px;
+  }
+  header p {
+    margin-top: 6px;
+    font-size: 1.2rem;
+    font-weight: 500;
+  }
+  .cart-link {
+    position: fixed;
+    top: 25px;
+    left: 20px;
+    background: #00796b;
+    color: white;
+    padding: 14px 20px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 1.15rem;
+    text-decoration: none;
+    box-shadow: 0 6px 15px rgba(0,77,64,0.6);
+    transition: background-color 0.3s ease;
+    z-index: 100;
+  }
+  .cart-link:hover {
+    background: #00332f;
+  }
+  #search-input {
+    display: block;
+    max-width: 400px;
+    margin: 30px auto 40px;
+    padding: 12px 20px;
+    font-size: 1.1rem;
+    border-radius: 30px;
+    border: 2px solid #00796b;
+    outline: none;
+    box-shadow: inset 0 3px 8px rgba(0,0,0,0.07);
+    transition: border-color 0.3s ease;
+    direction: rtl;
+  }
+  #search-input:focus {
+    border-color: #004d40;
+  }
+  .products {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
+    gap: 25px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .product {
+    background: white;
+    border-radius: 14px;
+    box-shadow: 0 10px 18px rgba(0,0,0,0.1);
+    padding: 18px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+  }
+  .product:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 25px rgba(0,121,107,0.25);
+  }
+  .product img {
+    height: 190px;
+    width: 100%;
+    object-fit: contain;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    user-select: none;
+  }
+  .product h3 {
+    font-size: 1.25rem;
+    color: #004d40;
+    margin: 8px 0 6px;
+    font-weight: 700;
+    min-height: 52px;
+  }
+  .product p {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #00796b;
+    margin-bottom: 16px;
+  }
+  .product button {
+    background: #00796b;
+    border: none;
+    padding: 12px 0;
+    border-radius: 30px;
+    color: white;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.25s ease;
+    user-select: none;
+  }
+  .product button:hover {
+    background: #004d40;
+  }
+  .no-products {
+    text-align: center;
+    font-size: 1.3rem;
+    color: #555;
+    margin-top: 80px;
+  }
+  @media (max-width: 480px) {
+    header h1 { font-size: 2rem; }
+    header p { font-size: 1rem; }
+    .cart-link {
+      font-size: 1rem;
+      padding: 12px 18px;
+      top: 18px; left: 15px;
+    }
+    #search-input {
+      max-width: 100%;
+      margin: 20px auto 30px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>فروشگاه صداباز</h1>
+  <p>خرید آنلاین هدفون و هندزفری با بهترین کیفیت</p>
+</header>
+
+<a href="cart.html" class="cart-link" aria-label="رفتن به سبد خرید">🛒 سبد خرید</a>
+
+<input
+  type="text"
+  id="search-input"
+  placeholder="جستجو در محصولات..."
+  onkeyup="filterProducts()"
+  aria-label="جستجو در محصولات"
+/>
+
+<div class="products" id="products"></div>
+
+<script>
+  const productsData = [
+    {name:"هدفون حرفه‌ای مدل A1", price:1200000, img:"https://s6.uupload.ir/files/f4a55d_yu4h.jpg"},
+    {name:"هندزفری بلوتوث مدل B2", price:850000, img:"https://s6.uupload.ir/files/هندزفری-بی-سیم-گردنی-akz-t37_0jge.jpg"},
+    {name:"هدفون گیمینگ مدل C3", price:1600000, img:"https://s6.uupload.ir/files/a3cc5ec1-b84c-493f-bce8-8bd7d458b5c4_lf3s.jpeg"},
+    {name:"هندزفری سیمی مدل D4", price:450000, img:"https://s6.uupload.ir/files/b196515e-5860-4046-b9f9-926e47879822_n11r.jpeg"},
+    {name:"هدفون بی‌سیم مدل E5", price:1350000, img:"https://s6.uupload.ir/files/c1738876-de52-4ec1-b7ec-39c8de390e16_ki6n.jpeg"},
+    {name:"هندزفری ورزشی مدل F6", price:780000, img:"https://s6.uupload.ir/files/c3447390-1c0d-464a-a40b-02a39a24a934_jq2x.jpeg"},
+    {name:"هدفون نویز کنسلینگ مدل G7", price:2200000, img:"https://s6.uupload.ir/files/5e76b7ca-ab15-478f-8066-715bafa8cf2a_hiq5.jpeg"},
+    {name:"هندزفری ساده مدل H8", price:320000, img:"https://s6.uupload.ir/files/1a6e4243-a327-45ad-9f67-25eca2551371_9bvu.jpeg"}
+  ];
+
+  const productsContainer = document.getElementById('products');
+
+  function renderProducts(products) {
+    productsContainer.innerHTML = '';
+    if(products.length === 0) {
+      productsContainer.innerHTML = '<p class="no-products">محصولی با این مشخصات پیدا نشد.</p>';
+      return;
+    }
+    products.forEach(({name, price, img}) => {
+      const productDiv = document.createElement('div');
+      productDiv.className = 'product';
+      productDiv.setAttribute('data-name', name.toLowerCase());
+      productDiv.setAttribute('data-price', price);
+
+      // تبدیل نام محصول برای لینک url (encodeURIComponent)
+      const productUrl = 'product.html?name=' + encodeURIComponent(name);
+
+      productDiv.innerHTML = `
+        <a href="${productUrl}" style="text-decoration:none; color:inherit;">
+          <img src="${img}" alt="${name}" loading="lazy" />
+          <h3>${name}</h3>
+          <p>${price.toLocaleString()} تومان</p>
+        </a>
+        <button onclick="addToCart('${name}', ${price}); event.stopPropagation();">افزودن به سبد خرید</button>
+      `;
+
+      productsContainer.appendChild(productDiv);
+    });
+  }
+
+  function addToCart(name, price) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const index = cart.findIndex(item => item.name === name);
+    const product = productsData.find(p => p.name === name);
+    if(index > -1) {
+      cart[index].quantity++;
+    } else {
+      cart.push({name, price, quantity:1, img: product.img});
+    }
+    localStorage.setItem('cart', JSON.stringify(cart));
+    alert(`محصول "${name}" به سبد خرید اضافه شد!`);
+  }
+
+  function filterProducts() {
+    const query = document.getElementById('search-input').value.toLowerCase();
+    const filtered = productsData.filter(p => p.name.toLowerCase().includes(query));
+    renderProducts(filtered);
+  }
+
+  renderProducts(productsData);
+</script>
+
+</body>
+</html>

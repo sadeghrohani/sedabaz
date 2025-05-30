@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>سبد خرید</title>
+<style>
+  @import url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css');
+  body {
+    font-family: 'Vazir', sans-serif;
+    background: #e0f2f1;
+    max-width: 700px;
+    margin: auto;
+    padding: 20px;
+  }
+  h1 {
+    text-align: center;
+    color: #004d40;
+  }
+  .cart-items {
+    margin-top: 25px;
+  }
+  .cart-item {
+    background: white;
+    display: flex;
+    align-items: center;
+    margin-bottom: 18px;
+    padding: 12px 18px;
+    border-radius: 14px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  .cart-item img {
+    width: 90px;
+    height: 90px;
+    object-fit: contain;
+    border-radius: 12px;
+    margin-left: 15px;
+  }
+  .cart-item-info {
+    flex-grow: 1;
+  }
+  .cart-item-info h3 {
+    margin: 0 0 6px;
+    font-weight: 700;
+    color: #00796b;
+  }
+  .cart-item-info p {
+    margin: 3px 0;
+    color: #004d40;
+    font-weight: 600;
+  }
+  .quantity-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .quantity-controls button {
+    background: #00796b;
+    border: none;
+    color: white;
+    font-weight: 700;
+    font-size: 1.2rem;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    line-height: 32px;
+    text-align: center;
+    margin: 2px 0;
+    user-select: none;
+  }
+  .quantity-controls span {
+    font-weight: 700;
+    margin: 4px 0;
+  }
+  .remove-btn {
+    background: #c62828;
+    border: none;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-right: 15px;
+    transition: background-color 0.25s ease;
+  }
+  .remove-btn:hover {
+    background: #8b0000;
+  }
+  .total {
+    margin-top: 30px;
+    text-align: center;
+    font-weight: 800;
+    font-size: 1.5rem;
+    color: #004d40;
+  }
+  a.back {
+    display: inline-block;
+    margin-top: 25px;
+    text-decoration: none;
+    color: #00796b;
+    font-weight: 700;
+  }
+  a.back:hover {
+    color: #004d40;
+  }
+  @media (max-width: 480px) {
+    .cart-item {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .cart-item img {
+      margin-left: 0;
+      margin-bottom: 12px;
+      width: 100%;
+      height: auto;
+    }
+    .remove-btn {
+      margin-right: 0;
+      margin-top: 10px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<h1>سبد خرید شما</h1>
+<div class="cart-items" id="cart-items"></div>
+<p class="total" id="total-price"></p>
+<a href="index.html" class="back">⬅ بازگشت به فروشگاه</a>
+
+<script>
+  function getCart() {
+    return JSON.parse(localStorage.getItem('cart')) || [];
+  }
+
+  function saveCart(cart) {
+    localStorage.setItem('cart', JSON.stringify(cart));
+  }
+
+  function renderCart() {
+    const cart = getCart();
+    const container = document.getElementById('cart-items');
+    container.innerHTML = '';
+    if(cart.length === 0) {
+      container.innerHTML = '<p style="text-align:center; font-size:1.2rem; color:#555;">سبد خرید شما خالی است.</p>';
+      document.getElementById('total-price').textContent = '';
+      return;
+    }
+
+    cart.forEach((item, index) => {
+      const itemDiv = document.createElement('div');
+      itemDiv.className = 'cart-item';
+      itemDiv.innerHTML = `
+        <img src="${item.img}" alt="${item.name}" loading="lazy" />
+        <div class="cart-item-info">
+          <h3>${item.name}</h3>
+          <p>قیمت واحد: ${item.price.toLocaleString()} تومان</p>
+          <p>قیمت کل: ${(item.price * item.quantity).toLocaleString()} تومان</p>
+        </div>
+        <div class="quantity-controls" aria-label="کنترل تعداد محصول">
+          <button aria-label="افزایش تعداد" onclick="changeQuantity(${index}, 1)">+</button>
+          <span aria-live="polite" aria-atomic="true">${item.quantity}</span>
+          <button aria-label="کاهش تعداد" onclick="changeQuantity(${index}, -1)">−</button>
+        </div>
+        <button class="remove-btn" aria-label="حذف محصول" onclick="removeItem(${index})">حذف</button>
+      `;
+      container.appendChild(itemDiv);
+    });
+
+    const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    document.getElementById('total-price').textContent = `جمع کل: ${totalPrice.toLocaleString()} تومان`;
+  }
+
+  function changeQuantity(index, delta) {
+    let cart = getCart();
+    cart[index].quantity += delta;
+    if(cart[index].quantity < 1) cart[index].quantity = 1;
+    saveCart(cart);
+    renderCart();
+  }
+
+  function removeItem(index) {
+    let cart = getCart();
+    if(confirm('آیا مطمئنید که می‌خواهید این محصول را حذف کنید؟')) {
+      cart.splice(index, 1);
+      saveCart(cart);
+      renderCart();
+    }
+  }
+
+  renderCart();
+</script>
+
+</body>
+</html>

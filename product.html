@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>جزئیات محصول</title>
+<style>
+  @import url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css');
+  body {
+    font-family: 'Vazir', sans-serif;
+    background: #e0f2f1;
+    margin: 0; padding: 20px;
+    min-height: 100vh;
+    color: #004d40;
+  }
+  a.back-link {
+    display: inline-block;
+    margin-bottom: 20px;
+    color: #00796b;
+    font-weight: 700;
+    text-decoration: none;
+  }
+  a.back-link:hover {
+    text-decoration: underline;
+  }
+  .product-details {
+    background: white;
+    border-radius: 14px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  .product-details img {
+    width: 100%;
+    max-height: 350px;
+    object-fit: contain;
+    border-radius: 12px;
+  }
+  .product-details h1 {
+    margin-top: 15px;
+    font-size: 2rem;
+    color: #004d40;
+  }
+  .product-details p.price {
+    font-size: 1.4rem;
+    color: #00796b;
+    font-weight: 700;
+    margin: 15px 0;
+  }
+  .product-details p.description {
+    font-size: 1.1rem;
+    margin: 15px 0;
+    line-height: 1.5;
+  }
+  .product-details ul.specs {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+  }
+  .product-details ul.specs li {
+    background: #b2dfdb;
+    margin-bottom: 8px;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 1rem;
+  }
+  .product-details button {
+    background: #00796b;
+    border: none;
+    padding: 14px 0;
+    width: 100%;
+    border-radius: 30px;
+    color: white;
+    font-weight: 700;
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin-top: 25px;
+    user-select: none;
+    transition: background-color 0.3s ease;
+  }
+  .product-details button:hover {
+    background: #004d40;
+  }
+  .not-found {
+    text-align: center;
+    margin-top: 100px;
+    font-size: 1.5rem;
+    color: #777;
+  }
+</style>
+<title>جزئیات محصول</title>
+</head>
+<body>
+
+<a href="index.html" class="back-link">← بازگشت به صفحه محصولات</a>
+
+<div class="product-details" id="product-details"></div>
+
+<script>
+  const productsData = [
+    {
+      name: "هدفون حرفه‌ای مدل A1",
+      price: 1200000,
+      img: "https://s6.uupload.ir/files/f4a55d_yu4h.jpg",
+      description: "هدفون حرفه‌ای با کیفیت صدای عالی و طراحی ارگونومیک برای استفاده طولانی مدت.",
+      specs: [
+        "نوع اتصال: بی‌سیم و باسیم",
+        "عمر باتری: تا 20 ساعت",
+        "وزن: 250 گرم"
+      ]
+    },
+    {
+      name: "هندزفری بلوتوث مدل B2",
+      price: 850000,
+      img: "https://s6.uupload.ir/files/هندزفری-بی-سیم-گردنی-akz-t37_0jge.jpg",
+      description: "هندزفری بلوتوث سبک با کیفیت صدای بالا و قابلیت حذف نویز.",
+      specs: [
+        "نوع اتصال: بلوتوث 5.0",
+        "عمر باتری: تا 10 ساعت",
+        "مقاومت در برابر آب: IPX5"
+      ]
+    },
+    {
+      name: "هدفون گیمینگ مدل C3",
+      price: 1600000,
+      img: "https://s6.uupload.ir/files/a3cc5ec1-b84c-493f-bce8-8bd7d458b5c4_lf3s.jpeg",
+      description: "هدفون گیمینگ با صدای فراگیر و میکروفون حرفه‌ای برای ارتباط بهتر در بازی‌ها.",
+      specs: [
+        "نوع اتصال: سیمی",
+        "میکروفون: دارد",
+        "نورپردازی RGB: دارد"
+      ]
+    },
+    {
+      name: "هندزفری سیمی مدل D4",
+      price: 450000,
+      img: "https://s6.uupload.ir/files/b196515e-5860-4046-b9f9-926e47879822_n11r.jpeg",
+      description: "هندزفری سیمی ساده و بادوام با کیفیت صدای مناسب.",
+      specs: [
+        "نوع اتصال: سیمی جک 3.5 میلی‌متری",
+        "وزن: 15 گرم",
+        "رنگ‌بندی: مشکی، سفید"
+      ]
+    },
+    {
+      name: "هدفون بی‌سیم مدل E5",
+      price: 1350000,
+      img: "https://s6.uupload.ir/files/c1738876-de52-4ec1-b7ec-39c8de390e16_ki6n.jpeg",
+      description: "هدفون بی‌سیم با عمر باتری بالا و کیفیت صدای عالی.",
+      specs: [
+        "نوع اتصال: بلوتوث 5.0",
+        "عمر باتری: تا 18 ساعت",
+        "وزن: 210 گرم"
+      ]
+    },
+    {
+      name: "هندزفری ورزشی مدل F6",
+      price: 780000,
+      img: "https://s6.uupload.ir/files/c3447390-1c0d-464a-a40b-02a39a24a934_jq2x.jpeg",
+      description: "هندزفری مخصوص ورزش با مقاومت در برابر عرق و پشتیبانی از بلوتوث.",
+      specs: [
+        "نوع اتصال: بلوتوث",
+        "مقاومت در برابر آب و عرق",
+        "وزن: 22 گرم"
+      ]
+    },
+    {
+      name: "هدفون نویز کنسلینگ مدل G7",
+      price: 2200000,
+      img: "https://s6.uupload.ir/files/5e76b7ca-ab15-478f-8066-715bafa8cf2a_hiq5.jpeg",
+      description: "هدفون با قابلیت حذف نویز فعال برای تجربه شنیداری بی‌نظیر.",
+      specs: [
+        "نوع اتصال: بی‌سیم",
+        "حذف نویز فعال (ANC)",
+        "عمر باتری: تا 25 ساعت"
+      ]
+    },
+    {
+      name: "هندزفری ساده مدل H8",
+      price: 320000,
+      img: "https://s6.uupload.ir/files/1a6e4243-a327-45ad-9f67-25eca2551371_9bvu.jpeg",
+      description: "هندزفری ساده و ارزان قیمت با کیفیت قابل قبول.",
+      specs: [
+        "نوع اتصال: سیمی",
+        "وزن: 12 گرم",
+        "رنگ: سفید"
+      ]
+    }
+  ];
+
+  function getQueryParam(param) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+  }
+
+  function renderProduct(product) {
+    const container = document.getElementById('product-details');
+    if(!product) {
+      container.innerHTML = '<p class="not-found">متاسفانه محصول مورد نظر یافت نشد.</p>';
+      return;
+    }
+
+    container.innerHTML = `
+      <img src="${product.img}" alt="${product.name}" loading="lazy" />
+      <h1>${product.name}</h1>
+      <p class="price">${product.price.toLocaleString()} تومان</p>
+      <p class="description">${product.description}</p>
+      <ul class="specs">
+        ${product.specs.map(spec => `<li>${spec}</li>`).join('')}
+      </ul>
+      <button onclick="addToCart('${product.name}', ${product.price})">افزودن به سبد خرید</button>
+    `;
+  }
+
+  function addToCart(name, price) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const index = cart.findIndex(item => item.name === name);
+    const product = productsData.find(p => p.name === name);
+    if(index > -1) {
+      cart[index].quantity++;
+    } else {
+      cart.push({name, price, quantity:1, img: product.img});
+    }
+    localStorage.setItem('cart', JSON.stringify(cart));
+    alert(`محصول "${name}" به سبد خرید اضافه شد!`);
+  }
+
+  // اجرا
+  const productName = getQueryParam('name');
+  const product = productsData.find(p => p.name === productName);
+  renderProduct(product);
+</script>
+
+</body>
+</html>
