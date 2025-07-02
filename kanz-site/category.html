@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>کتاب‌های موضوعی | بساتین</title>
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Vazir', sans-serif;
+      background-color: #f4f3ef;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: #5c764c;
+      color: white;
+      text-align: center;
+      padding: 30px 20px;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.8rem;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    .book-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .book-card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s ease;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .book-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    }
+
+    .book-card img {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+    }
+
+    .book-info {
+      padding: 15px;
+    }
+
+    .book-info h3 {
+      margin: 0 0 10px;
+      font-size: 1.1rem;
+      color: #333;
+    }
+
+    .book-info a {
+      color: #4a774a;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .book-info a:hover {
+      color: #2e523e;
+    }
+
+    .back-link {
+      display: block;
+      text-align: center;
+      margin: 20px auto;
+      color: #333;
+      font-size: 1rem;
+      text-decoration: none;
+      padding: 10px 20px;
+    }
+
+    footer {
+      background: #eee;
+      text-align: center;
+      padding: 20px;
+      font-size: 0.9rem;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1 id="categoryTitle">موضوع</h1>
+  </header>
+
+  <main>
+    <div class="book-grid" id="bookGrid">
+      <p>در حال بارگذاری کتاب‌ها...</p>
+    </div>
+    <a href="index.html" class="back-link">⬅ بازگشت به موضوعات</a>
+  </main>
+
+  <footer>
+    <p>بساتین | ترجمه متون حوزوی © 2025</p>
+  </footer>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const categoryId = urlParams.get('cat');
+
+    const categoryTitleMap = {
+      "fiqh": "فقه",
+      "usul": "اصول",
+      "philosophy": "فلسفه",
+      "theology": "کلام",
+      "hadith": "حدیث",
+      "rijal": "رجال"
+    };
+
+    document.getElementById('categoryTitle').textContent = `📚 موضوع: ${categoryTitleMap[categoryId] || 'نامشخص'}`;
+
+    fetch('data/books.json')
+      .then(res => res.json())
+      .then(books => {
+        const filtered = books.filter(book => book.category === categoryId);
+        const grid = document.getElementById('bookGrid');
+        grid.innerHTML = '';
+
+        if (filtered.length === 0) {
+          grid.innerHTML = '<p>هیچ کتابی در این موضوع یافت نشد.</p>';
+          return;
+        }
+
+        filtered.forEach(book => {
+          const card = document.createElement('div');
+          card.className = 'book-card';
+          card.innerHTML = `
+            <img src="${book.cover || 'assets/images/default-cover.jpg'}" alt="جلد ${book.title}">
+            <div class="book-info">
+              <h3>${book.title}</h3>
+              <a href="book.html?book=${encodeURIComponent(book.id)}">مشاهده ترجمه</a>
+            </div>
+          `;
+          grid.appendChild(card);
+        });
+      })
+      .catch(() => {
+        document.getElementById('bookGrid').innerHTML = '<p>خطا در بارگذاری کتاب‌ها.</p>';
+      });
+  </script>
+</body>
+</html>

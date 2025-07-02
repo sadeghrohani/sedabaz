@@ -1,0 +1,108 @@
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>بساتین | ترجمه متون حوزوی</title>
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Vazir', sans-serif;
+      background-color: #f5f4ef;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #5c764c;
+      color: white;
+      text-align: center;
+      padding: 40px 20px;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
+    header p {
+      margin-top: 10px;
+      font-size: 1rem;
+      opacity: 0.9;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    .category-card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      text-align: center;
+      padding: 30px 15px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #365329;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .category-card:hover {
+      background: #e5f1da;
+      transform: translateY(-5px);
+    }
+
+    footer {
+      text-align: center;
+      background: #eee;
+      padding: 20px;
+      font-size: 0.9rem;
+      margin-top: 50px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1> الْکُتُبُ بَسَاتِینُ الْعُلَمَاءِ</h1>
+    <p>کتاب‌ها باغ‌های دانشمندان هستند (امام علی)</p>
+    <p>ترجمه متون حوزوی بساتین 📚</p>
+  </header>
+
+  <main>
+    <div class="category-grid" id="categoryList">
+      <p>در حال بارگذاری موضوعات...</p>
+    </div>
+  </main>
+
+  <footer>
+    <p>بساتین | ترجمه متون حوزوی © 2025</p>
+  </footer>
+
+  <script>
+    fetch('data/categories.json')
+      .then(res => res.json())
+      .then(categories => {
+        const container = document.getElementById('categoryList');
+        container.innerHTML = '';
+        categories.forEach(cat => {
+          const a = document.createElement('a');
+          a.href = `category.html?cat=${encodeURIComponent(cat.id)}`;
+          a.className = 'category-card';
+          a.textContent = cat.name;
+          container.appendChild(a);
+        });
+      })
+      .catch(() => {
+        document.getElementById('categoryList').innerHTML = '<p>خطا در بارگذاری موضوعات.</p>';
+      });
+  </script>
+</body>
+</html>

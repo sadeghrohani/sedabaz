@@ -1,0 +1,14 @@
+[
+  { "id": "fiqh", "name": "فقه" },
+  { "id": "usul", "name": "اصول فقه" },
+  { "id": "philosophy", "name": "فلسفه" },
+  { "id": "theology", "name": "کلام" },
+  { "id": "logic", "name": "منطق" },
+  { "id": "Arabic", "name": "ادبیات عرب" },
+  { "id": "Quran", "name": "علوم قرآنی" },
+  { "id": "hadith", "name": "علوم حدیث" },
+  { "id": "ziarat", "name": "ادعیه و زیارات" },
+  { "id": "rijal", "name": "رجال و درایه" },
+   { "id": "akhlaq", "name": "اخلاق" },
+   { "id": "erfan", "name": "عرفان" }
+]

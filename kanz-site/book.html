@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>نمایش کتاب | بساتین</title>
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Vazir', sans-serif;
+      background-color: #fdfcf9;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    header {
+      background: #5c764c;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      background: #eee;
+      flex-wrap: wrap;
+    }
+    .toolbar input[type="text"] {
+      padding: 8px;
+      width: 200px;
+    }
+    .toolbar select, .toolbar button {
+      padding: 8px 10px;
+      margin-right: 10px;
+    }
+    .book-container {
+      display: flex;
+      justify-content: center;
+      padding: 30px 20px;
+      gap: 40px;
+    }
+    .page {
+      width: 45%;
+      background: white;
+      padding: 20px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+      min-height: 400px;
+      line-height: 2;
+      font-size: 1.1rem;
+      overflow-y: auto;
+    }
+    .page.arabic {
+      direction: rtl;
+      border-right: 2px solid #ccc;
+    }
+    .page.persian {
+      direction: rtl;
+    }
+    .pagination {
+      text-align: center;
+      margin-top: 30px;
+    }
+    .pagination button {
+      padding: 8px 12px;
+      margin: 0 5px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 id="bookTitle">در حال بارگذاری...</h1>
+  </header>
+
+  <div class="toolbar">
+    <div>
+      <label>انتخاب صفحه:
+        <select id="pageSelector"></select>
+      </label>
+      <button onclick="goToPage(0)">اول</button>
+      <button onclick="prevPage()">قبلی</button>
+      <button onclick="nextPage()">بعدی</button>
+      <button onclick="goToPage(totalPages - 1)">آخر</button>
+    </div>
+    <input type="text" id="searchInput" placeholder="جستجو در متن..." oninput="searchText(this.value)" />
+  </div>
+
+  <div class="book-container">
+    <div class="page arabic" id="arabicPage"></div>
+    <div class="page persian" id="persianPage"></div>
+  </div>
+
+  <div class="pagination">
+    <span>صفحه <span id="currentPageNum">1</span> از <span id="totalPageNum">...</span></span>
+  </div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const bookId = urlParams.get('book');
+    let arabicPages = [];
+    let persianPages = [];
+    let currentPage = 0;
+    let totalPages = 0;
+
+    const arabicDiv = document.getElementById('arabicPage');
+    const persianDiv = document.getElementById('persianPage');
+    const pageSelector = document.getElementById('pageSelector');
+    const currentPageNum = document.getElementById('currentPageNum');
+    const totalPageNum = document.getElementById('totalPageNum');
+    const bookTitle = document.getElementById('bookTitle');
+
+    async function loadBook() {
+      try {
+        const [arRes, faRes] = await Promise.all([
+          fetch(`books/${bookId}-ar.json`),
+          fetch(`books/${bookId}-fa.json`)
+        ]);
+        arabicPages = await arRes.json();
+        persianPages = await faRes.json();
+        totalPages = Math.min(arabicPages.length, persianPages.length);
+
+        bookTitle.textContent = `📘 کتاب: ${bookId}`;
+        totalPageNum.textContent = totalPages;
+
+        // Populate page selector
+        for (let i = 0; i < totalPages; i++) {
+          const opt = document.createElement('option');
+          opt.value = i;
+          opt.textContent = `صفحه ${i + 1}`;
+          pageSelector.appendChild(opt);
+        }
+        pageSelector.onchange = () => goToPage(Number(pageSelector.value));
+
+        renderPage(currentPage);
+      } catch (e) {
+        arabicDiv.textContent = persianDiv.textContent = 'خطا در بارگذاری کتاب.';
+      }
+    }
+
+    function renderPage(page) {
+      currentPage = page;
+      arabicDiv.innerHTML = highlightSearch(arabicPages[page] || '');
+      persianDiv.innerHTML = highlightSearch(persianPages[page] || '');
+      currentPageNum.textContent = page + 1;
+      pageSelector.value = page;
+    }
+
+    function prevPage() {
+      if (currentPage > 0) renderPage(currentPage - 1);
+    }
+    function nextPage() {
+      if (currentPage < totalPages - 1) renderPage(currentPage + 1);
+    }
+    function goToPage(page) {
+      if (page >= 0 && page < totalPages) renderPage(page);
+    }
+
+    function highlightSearch(text) {
+      const query = document.getElementById('searchInput').value.trim();
+      if (!query) return text;
+      const regex = new RegExp(`(${query})`, 'gi');
+      return text.replace(regex, '<mark>$1</mark>');
+    }
+
+    function searchText(val) {
+      renderPage(currentPage); // re-render with highlights
+    }
+
+    loadBook();
+  </script>
+</body>
+</html>
